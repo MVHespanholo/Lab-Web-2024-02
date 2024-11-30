@@ -1,0 +1,6 @@
+create table aluno (
+    id serial,
+    nome varchar(60),
+    idade int,
+    primary kei(id);
+)

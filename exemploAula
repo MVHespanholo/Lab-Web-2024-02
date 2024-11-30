@@ -1,0 +1,55 @@
+//GET: v1/orders => consulta todos os pedidos
+[
+  {
+    "id": 9191,
+    "created_id": {
+      "id": 121232,
+      "cpf": "1324234243244-5",
+      "nome": "Marcos"
+      },
+      "status": PAGO,
+      "biling_branch": {
+        "id": 22,
+        "zip_code": "1212334"
+      },
+      "total": {
+        "value": 345.99,
+        "currency": "BRL"
+      }
+  }
+]
+
+//GET: /v1/orders/{id} => consulta 1 pedido por id
+{
+  "id": 9191,
+  "created_id": {
+    "id": 121232,
+    "cpf": "1324234243244-5",
+    "nome": "Marcos"
+    },
+    "status": PAGO,
+    "biling_branch": {
+      "id": 22,
+      "zip_code": "1212334"
+    },
+    "total": {
+      "value": 345.99,
+      "currency": "BRL"
+    }
+}
+
+// item do pedido =>consulta os items de 1 pedido
+//GET: /v1/orders/{id}/items
+[
+  {
+    "sequence": 1,
+    "product": {
+      "id": 2929,
+      "description": iphone,
+      "price": {
+        "value": 15000.50,
+        "currenty": "BRL"
+      }
+    }
+  }
+]

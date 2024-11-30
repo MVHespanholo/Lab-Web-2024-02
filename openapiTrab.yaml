@@ -1,0 +1,259 @@
+openapi: 3.0.3
+
+info:
+  title: API de Produtos
+  description: Produtos de Venda da Empresa
+  termsOfService: http://swager.io/terms
+  contact:
+    email: teste@fatec.sp.gov.br
+  license:
+    name: Apache 2.0
+    url: http://swager.io/terms
+  version: 1.0.0
+
+servers:
+  - url: http://sistema-compass-homolog.com.br
+  - url: https://sistema-compass.com.br
+
+paths:
+  /pedidos:
+    get:
+      summary: Consulta de pedidos
+      description: Consulta de pedidos com base em filtros.
+      parameters:
+        - name: idPedido
+          in: query
+          description: ID único do pedido
+          schema:
+            type: string
+        - name: idCliente
+          in: query
+          description: ID do cliente
+          schema:
+            type: string
+        - name: cpfCliente
+          in: query
+          description: CPF do cliente
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: Status do pedido (pago, enviado, aguardando pagamento, cancelado)
+          schema:
+            type: string
+        - name: dataMaiorQue
+          in: query
+          description: Filtro de data maior que (formato yyyy-mm-dd)
+          schema:
+            type: string
+        - name: dataMenorQue
+          in: query
+          description: Filtro de data menor que (formato yyyy-mm-dd)
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Retorna uma lista de pedidos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pedido'
+        '404':
+          description: Nenhum pedido encontrado
+        '500':
+          description: Erro no servidor
+
+    post:
+      summary: Cria um novo pedido
+      description: Criação de um novo pedido.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PedidoCriacao'
+      responses:
+        '201':
+          description: Pedido criado com sucesso
+        '400':
+          description: Dados inválidos
+        '500':
+          description: Erro no servidor
+
+  /pedidos/{idPedido}/itens:
+    get:
+      summary: Consulta os itens de um pedido específico
+      description: Retorna os itens de um pedido utilizando o ID do pedido.
+      parameters:
+        - name: idPedido
+          in: path
+          required: true
+          description: ID único do pedido
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Retorna os itens do pedido
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Item'
+        '404':
+          description: Pedido não encontrado
+        '500':
+          description: Erro no servidor
+
+    post:
+      summary: Adiciona itens a um pedido existente
+      description: Adiciona itens a um pedido com base no ID do pedido.
+      parameters:
+        - name: idPedido
+          in: path
+          required: true
+          description: ID único do pedido
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/ItemCriacao'
+      responses:
+        '201':
+          description: Item(s) adicionado(s) com sucesso
+        '400':
+          description: Dados inválidos
+        '500':
+          description: Erro no servidor
+
+components:
+  schemas:
+    Pedido:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID único do pedido
+        data:
+          type: string
+          format: date
+          description: Data do pedido
+        cliente:
+          $ref: '#/components/schemas/Cliente'
+        status:
+          type: string
+          description: Status do pedido
+          enum: [pago, enviado, aguardando pagamento, cancelado]
+        filial:
+          $ref: '#/components/schemas/Filial'
+        valorTotal:
+          type: number
+          format: float
+          description: Valor total do pedido
+        currency:
+          type: string
+          example: BRL
+        itens:
+          type: array
+          items:
+            $ref: '#/components/schemas/Item'
+
+    PedidoCriacao:
+      type: object
+      required:
+        - cliente
+        - filial
+        - valorTotal
+        - itens
+      properties:
+        cliente:
+          $ref: '#/components/schemas/Cliente'
+        filial:
+          $ref: '#/components/schemas/Filial'
+        valorTotal:
+          type: number
+          format: float
+          description: Valor total do pedido
+        currency:
+          type: string
+          example: BRL
+        itens:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemCriacao'
+
+    Cliente:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID do cliente
+        nome:
+          type: string
+          description: Nome do cliente
+        cpf:
+          type: string
+          description: CPF do cliente
+
+    Filial:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID da filial de origem
+        cep:
+          type: string
+          description: CEP da filial de origem
+
+    Item:
+      type: object
+      properties:
+        sequencia:
+          type: integer
+          description: Sequência do item no pedido
+        idProduto:
+          type: string
+          description: ID do produto
+        descricao:
+          type: string
+          description: Descrição do produto
+        quantidade:
+          type: number
+          description: Quantidade do produto
+        valorUnitario:
+          type: number
+          format: float
+          description: Valor unitário do produto
+        totalItem:
+          type: number
+          format: float
+          description: Valor total do item
+
+    ItemCriacao:
+      type: object
+      required:
+        - idProduto
+        - descricao
+        - quantidade
+        - valorUnitario
+      properties:
+        idProduto:
+          type: string
+          description: ID do produto
+        descricao:
+          type: string
+          description: Descrição do produto
+        quantidade:
+          type: number
+          description: Quantidade do produto
+        valorUnitario:
+          type: number
+          format: float
+          description: Valor unitário do produto

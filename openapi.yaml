@@ -1,0 +1,102 @@
+openapi: 3.0.3
+
+info:
+  title: API de Produtos
+  description: Produtos de Venda da Empresa X
+  termsOfService: http//swager.io/terms
+  contact:
+    email: fatec@fatecfranca.edu.br
+  license:
+    name: Apache 2.0
+    url: http//swager.io/terms
+  version: 1.0.0
+
+servers:
+  - url: http://sistema-compass-homolog.com.br
+  - url: https://sistema-compass.com.br
+
+paths:
+  /produtos:
+    post:
+      summary: Cadastra novos produtos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProdutoRequest"
+      responses:
+        '201':
+          description: Sucesso cadastro produto
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProdutoResponse"
+                
+                
+components:
+  schemas:
+    
+    ProdutoRequest:
+      type: object
+      properties:
+        descricao:
+          type: string
+          description: Descricao do produto
+          example: Geladeira
+          maxLength: 100
+          minLength: 5
+        preco: 
+          type: object
+          properties:
+            custo:
+              type: number
+              format: decimal
+              example: 19.99
+              description: Preço custo produto
+            venda:
+              type: number
+              format: decimal
+              example: 25.87
+              description: Preco de venda consumidor
+        categorias:
+          type: array
+          items:
+            type: string
+          example: ["A", "B"]
+      required:
+        - descricao
+        - categorias
+        - preco
+
+    ProdutoResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 29394
+        descricao:
+          type: string
+          description: Descricao do produto
+          example: Geladeira
+          maxLength: 100
+          minLength: 5
+        preco: 
+          type: object
+          properties:
+            custo:
+              type: number
+              format: decimal
+              example: 19.99
+              description: Preço custo produto
+            venda:
+              type: number
+              format: decimal
+              example: 25.87
+              description: Preco de venda consumidor
+        categorias:
+          type: array
+          items:
+            type: string
+          example: ["A", "B"]
+    
