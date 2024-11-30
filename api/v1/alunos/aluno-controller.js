@@ -6,7 +6,7 @@ const getAlunos = async (request, h) => {
 
     const result = await  alunoBusiness.list(request.query);
     
-    return resultado;
+    return result;
 }
 
 const alunoPorId = async (request, h) => {

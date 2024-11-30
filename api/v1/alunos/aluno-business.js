@@ -1,15 +1,14 @@
 const listaAlunos = [];
 
 const save = async (params) => {
-    aluno.id = Math.floor(Math.random() * 1000);
+    params.id = Math.floor(Math.random() * 1000);
 
-    listaAlunos.push(aluno);
+    listaAlunos.push(params);
 
-    return aluno;
+    return params;
 }
 
 const list = async(filters) => {
-    
     let resultado;
     if(filters.nome && filters.idade) {
         resultado = listaAlunos
