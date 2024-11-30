@@ -15,7 +15,7 @@ Apresenta estrutura base para desenvolvimento de apis.
 
 1. Clone o repositório em sua máquina local:
    ```bash
-   git clone git@github.com:fabiomedeirosf/lab-web-2024-2.git
+   git clone git@github.com:MVHespanholo/Lab-Web-2024-2.git
    ```
 2. Acesse a pasta do projeto:
    ```bash
