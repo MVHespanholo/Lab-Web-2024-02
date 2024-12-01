@@ -1,20 +1,23 @@
 const { Op } = require('sequelize');
-const Produto = require('./produto-model');
+const { Produto } = require('./produto-model');
 
 const createProduto = async (request, h) => {
     try {
         const produto = await Produto.create(request.payload);
         return h.response(produto).code(201);
     } catch (error) {
-        console.error(error);
-        return h.response({ message: 'Erro ao criar produto' }).code(500);
+        console.error('Erro ao criar produto:', error);
+        return h.response({ 
+            message: 'Erro ao criar produto',
+            error: error.message 
+        }).code(500);
     }
 };
 
 const updateProduto = async (request, h) => {
     try {
         const [updated] = await Produto.update(request.payload, {
-            where: { id: request.params.id }
+            where: { cod_produto: request.params.id }
         });
 
         if (updated) {
@@ -24,15 +27,18 @@ const updateProduto = async (request, h) => {
 
         return h.response({ message: 'Produto não encontrado' }).code(404);
     } catch (error) {
-        console.error(error);
-        return h.response({ message: 'Erro ao atualizar produto' }).code(500);
+        console.error('Erro ao atualizar produto:', error);
+        return h.response({ 
+            message: 'Erro ao atualizar produto',
+            error: error.message 
+        }).code(500);
     }
 };
 
 const deleteProduto = async (request, h) => {
     try {
         const deleted = await Produto.destroy({
-            where: { id: request.params.id }
+            where: { cod_produto: request.params.id }
         });
 
         if (deleted) {
@@ -41,43 +47,61 @@ const deleteProduto = async (request, h) => {
 
         return h.response({ message: 'Produto não encontrado' }).code(404);
     } catch (error) {
-        console.error(error);
-        return h.response({ message: 'Erro ao deletar produto' }).code(500);
+        console.error('Erro ao deletar produto:', error);
+        return h.response({ 
+            message: 'Erro ao deletar produto',
+            error: error.message 
+        }).code(500);
     }
 };
 
 const getProdutoById = async (request, h) => {
     try {
         const produto = await Produto.findByPk(request.params.id);
-
+        
         if (produto) {
             return h.response(produto).code(200);
         }
 
         return h.response({ message: 'Produto não encontrado' }).code(404);
     } catch (error) {
-        console.error(error);
-        return h.response({ message: 'Erro ao buscar produto' }).code(500);
+        console.error('Erro ao buscar produto:', error);
+        return h.response({ 
+            message: 'Erro ao buscar produto',
+            error: error.message 
+        }).code(500);
     }
 };
 
 const getProdutos = async (request, h) => {
     try {
-        const { categoria, nome } = request.query;
+        const { categoria, nome, status } = request.query;
         const where = {};
 
         if (categoria) {
             where.categoria = categoria;
         }
+
         if (nome) {
-            where.nome = { [Op.like]: `%${nome}%` };
+            where.nome = { [Op.iLike]: `%${nome}%` };
         }
 
-        const produtos = await Produto.findAll({ where });
+        if (status) {
+            where.status = status;
+        }
+
+        const produtos = await Produto.findAll({ 
+            where,
+            order: [['nome', 'ASC']]
+        });
+
         return h.response(produtos).code(200);
     } catch (error) {
-        console.error(error);
-        return h.response({ message: 'Erro ao buscar produtos' }).code(500);
+        console.error('Erro ao buscar produtos:', error);
+        return h.response({ 
+            message: 'Erro ao buscar produtos',
+            error: error.message 
+        }).code(500);
     }
 };
 

@@ -1,12 +1,16 @@
 const Sequelize = require('sequelize');
+const config = require('./envs-config');
 
-const sequelizeConfig = {
-    dialect: 'postgres',
-    port: 5432,
-    host: 'localhost',
-    logging: console.log
-};
+const sequelize = new Sequelize(
+    'banco_teste',
+    'postgres',
+    '1241',
+    {
+        dialect: 'postgres',
+        host: 'localhost',
+        port: 5434,
+        logging: console.log
+    }
+);
 
-const sequelize = new Sequelize('database', 'username', 'password', sequelizeConfig);
-
-module.exports = sequelize;
+module.exports = { sequelize };

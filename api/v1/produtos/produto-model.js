@@ -1,69 +1,73 @@
-const { Sequelize, DataTypes } = require('sequelize');
-const sequelize = require('../../../config/db');
+const Sequelize = require('sequelize');
+const database = require('../../../config/db');
 
-const Produto = sequelize.define('Produto', {
+const Produto = database.sequelize.define('Produto', {
     id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true, // Adicionando autoIncrement para o id
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
         primaryKey: true,
-        allowNull: false
+        field: 'cod_produto'
     },
     nome: {
-        type: DataTypes.STRING,
-        allowNull: false
+        type: Sequelize.STRING,
+        allowNull: false,
+        field: 'nome'
     },
     descricao: {
-        type: DataTypes.TEXT,
-        allowNull: true
+        type: Sequelize.TEXT,
+        allowNull: true,
+        field: 'descricao'
     },
     categoria: {
-        type: DataTypes.STRING,
-        allowNull: false
+        type: Sequelize.STRING,
+        allowNull: false,
+        field: 'categoria'
     },
     marca: {
-        type: DataTypes.STRING,
-        allowNull: false
+        type: Sequelize.STRING,
+        allowNull: false,
+        field: 'marca'
     },
     preco: {
-        type: DataTypes.FLOAT,
+        type: Sequelize.FLOAT,
         allowNull: false,
-        validate: {
-            isFloat: true, // Validação para garantir que seja um número
-            min: 0 // Garantindo que o preço não seja negativo
-        }
+        field: 'preco'
     },
     quantidadeEstoque: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         allowNull: false,
-        validate: {
-            min: 0 // Garantindo que a quantidade em estoque não seja negativa
-        }
+        field: 'quantidade_estoque'
     },
     codigoBarras: {
-        type: DataTypes.STRING,
-        allowNull: false
+        type: Sequelize.STRING,
+        allowNull: false,
+        field: 'codigo_barras'
     },
     dimensoes: {
-        type: DataTypes.JSON,
-        allowNull: true
+        type: Sequelize.JSON,
+        allowNull: true,
+        field: 'dimensoes'
     },
     peso: {
-        type: DataTypes.JSON,
-        allowNull: true
+        type: Sequelize.JSON,
+        allowNull: true,
+        field: 'peso'
     },
     status: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         allowNull: false,
-        defaultValue: 'ATIVO'
+        defaultValue: 'ATIVO',
+        field: 'status'
     },
     dataCadastro: {
-        type: DataTypes.DATE,
+        type: Sequelize.DATE,
         allowNull: false,
-        defaultValue: Sequelize.NOW
+        defaultValue: Sequelize.NOW,
+        field: 'data_cadastro'
     }
 }, {
     tableName: 'produtos',
     timestamps: false
 });
 
-module.exports = Produto;
+module.exports = { Produto };
