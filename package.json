@@ -12,7 +12,10 @@
   "license": "ISC",
   "dependencies": {
     "@hapi/hapi": "^21.3.10",
+    "@hapi/inert": "^7.1.0",
+    "@hapi/vision": "^7.0.3",
     "dotenv": "^16.4.5",
+    "hapi-swagger": "^17.3.1",
     "joi": "^17.13.3",
     "pg": "^8.13.1",
     "sequelize": "^6.37.5"

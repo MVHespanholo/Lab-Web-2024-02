@@ -2,26 +2,39 @@ const Hapi = require("@hapi/hapi");
 const routes = require("./config/routes");
 const config = require('./config/envs-config');
 const { sequelize } = require('./config/db');
+const Inert = require('@hapi/inert');
+const Vision = require('@hapi/vision');
+const HapiSwagger = require('hapi-swagger');
+const swaggerOptions = require('./config/swagger-config');
 
 const server = Hapi.server({
     port: config.port,
     host: config.host
 });
 
-routes.forEach((path) => server.route(path));
+const init = async () => {
+    await server.register([
+        Inert,
+        Vision,
+        {
+            plugin: HapiSwagger,
+            options: swaggerOptions
+        }
+    ]);
 
-// Adicione isto para sincronizar o banco de dados
-server.ext('onPreStart', async (server) => {
+    routes.forEach((path) => server.route(path));
+
     try {
         await sequelize.authenticate();
         console.log('Conexão com o banco estabelecida com sucesso.');
-        // Use force: true apenas em desenvolvimento/testes
         await sequelize.sync({ force: false });
         console.log('Modelos sincronizados com o banco de dados.');
     } catch (err) {
         console.error('Erro ao conectar com o banco:', err);
         throw err;
     }
-});
 
-module.exports = server;
+    return server;
+};
+
+module.exports = { server, init };
