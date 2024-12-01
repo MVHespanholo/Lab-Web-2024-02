@@ -1,38 +1,46 @@
-const { createProduto, updateProduto, deleteProduto, getProdutoById, getProdutos } = require('./produto-controller');
-const { createProduto: createProdutoSchema, updateProduto: updateProdutoSchema } = require('./produto-schema');
+const produtoController = require("./produto-controller");
+const produtoSchema = require("./produto-schema");
 
-const produtoRoutes = [
+const baseVersion = '/v1';
+
+const routes = [
     {
-        method: 'POST',
-        path: '/produtos',
-        handler: createProduto,
+        method: "POST",
+        path: `${baseVersion}/produtos`,
         options: {
-            validate: createProdutoSchema
+            handler: produtoController.createProduto,
+            validate: produtoSchema.createProduto
         }
     },
     {
-        method: 'PUT',
-        path: '/produtos/{id}',
-        handler: updateProduto,
+        method: "PUT",
+        path: `${baseVersion}/produtos/{id}`,
         options: {
-            validate: updateProdutoSchema
+            handler: produtoController.updateProduto,
+            validate: produtoSchema.updateProduto
         }
     },
     {
-        method: 'DELETE',
-        path: '/produtos/{id}',
-        handler: deleteProduto
+        method: "DELETE",
+        path: `${baseVersion}/produtos/{id}`,
+        options: {
+            handler: produtoController.deleteProduto
+        }
     },
     {
-        method: 'GET',
-        path: '/produtos/{id}',
-        handler: getProdutoById
+        method: "GET",
+        path: `${baseVersion}/produtos/{id}`,
+        options: {
+            handler: produtoController.getProdutoById
+        }
     },
     {
-        method: 'GET',
-        path: '/produtos',
-        handler: getProdutos
+        method: "GET",
+        path: `${baseVersion}/produtos`,
+        options: {
+            handler: produtoController.getProdutos
+        }
     }
 ];
 
-module.exports = produtoRoutes;
+module.exports = routes;
